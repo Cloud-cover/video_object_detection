@@ -150,13 +150,15 @@ def main(_):
     raise ValueError('set must be in : {}'.format(SETS))
 
   data_dir = FLAGS.data_dir # this is where we expect to find the images
-  writer = tf.python_io.TFRecordWriter(FLAGS.output_path)
+  writer_train = tf.python_io.TFRecordWriter(os.path.join(FLAGS.output_path, 'pascal_train.record'))
+  writer_value = tf.python_io.TFRecordWriter(os.path.join(FLAGS.output_path, 'pascal_value.record'))
 
   # load the label map in the protofbuf format
   label_map_dict = label_map_util.get_label_map_dict(FLAGS.label_map_path)
 
   # this is where we expect to find the annotation XMLs
   annotations_dir = os.path.join(data_dir, FLAGS.annotations_dir)
+  cnt = 0
 
   for f in os.listdir(data_dir):
     if not f.endswith(".jpg"):
@@ -170,9 +172,16 @@ def main(_):
     data = dataset_util.recursive_parse_xml_to_dict(xml)['annotation']
 
     tf_example = dict_to_tf_example(data, data_dir, label_map_dict, FLAGS.ignore_difficult_instances)
-    writer.write(tf_example.SerializeToString())
 
-  writer.close()
+    if 0 == cnt % 5:
+        writer_value.write(tf_example.SerializeToString())
+    else:
+        writer_train.write(tf_example.SerializeToString())
+
+    cnt += 1
+
+  writer_train.close()
+  writer_value.close()
 
 
 if __name__ == '__main__':

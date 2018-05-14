@@ -109,10 +109,11 @@ item {
 I then created the training data set by executing the following command:
 ```
 $ cd TFRecord_prep
-$ python create_pascal_tf_record.py --data_dir=../workspace --label_map_path=../workspace/label.pbtxt --output_path=../workspace/pascal.record
+$ python create_pascal_tf_record.py --data_dir=../workspace --label_map_path=../data/label.pbtxt --output_path=../data
 ```
 
-The resulting training file is this `./workspace/pascal.record`.
+The resulting training file is this `./data/pascal_train.record` and the resulting
+validation file is this `./data/pascal_value.record`.
 
 ### Training Neural Network
 
