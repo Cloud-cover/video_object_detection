@@ -21,7 +21,7 @@ r"""Convert raw PASCAL dataset to TFRecord for object_detection.
 Example usage:
     python create_pascal_tf_record.py \
         --data_dir=../workspace \
-        --label_map_path=../workspace/pascal_label_map.pbtxt \
+        --label_map_path=../workspace/label.pbtxt \
         --output_path=../workspace/pascal.record
 """
 from __future__ import absolute_import
@@ -151,11 +151,9 @@ def main(_):
 
   data_dir = FLAGS.data_dir # this is where we expect to find the images
   writer = tf.python_io.TFRecordWriter(FLAGS.output_path)
-  #label_map_dict = label_map_util.get_label_map_dict(FLAGS.label_map_path)
-  # TODO I just hard-coded this for my own use, instead of trying to type it up
-  # in a file using protobuf format
-  label_map_dict = {'Jessie': 1}
-  print(label_map_dict)
+
+  # load the label map in the protofbuf format
+  label_map_dict = label_map_util.get_label_map_dict(FLAGS.label_map_path)
 
   # this is where we expect to find the annotation XMLs
   annotations_dir = os.path.join(data_dir, FLAGS.annotations_dir)

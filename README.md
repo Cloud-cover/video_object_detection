@@ -97,24 +97,19 @@ from `models/research/object_detection/dataset_tools` and customized it for my
 own needs. You can find it here: `./TRFecord_prep/create_pascal_tf_record.py`.
 
 The gist of my changes is how the code finds the training file, how it handles
-the file path, and how it defines the label map. It is presently hard-coded
-instead of being loaded from a protobuf map persisted in something like
-`pascal_label_map.pbtxt` file.
-
-The original code:
-```python
-label_map_dict = label_map_util.get_label_map_dict(FLAGS.label_map_path)
+the file path. The following is the label map `label.pbtxt` file that I defined
+for my training annotated images (in my case only annotating my dog Jessie):
 ```
-
-was changed to this:
-```python
-label_map_dict = {'Jessie': 1}
+item {
+ id: 1
+ name: 'Jessie'
+}
 ```
 
 I then created the training data set by executing the following command:
 ```
 $ cd TFRecord_prep
-$ python create_pascal_tf_record.py --data_dir=../workspace --label_map_path=../workspace/pascal_label_map.pbtxt --output_path=../workspace/pascal.record
+$ python create_pascal_tf_record.py --data_dir=../workspace --label_map_path=../workspace/label.pbtxt --output_path=../workspace/pascal.record
 ```
 
 The resulting training file is this `./workspace/pascal.record`.
