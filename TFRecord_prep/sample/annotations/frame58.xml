@@ -1,0 +1,23 @@
+<annotation>
+    <folder>workspace</folder>
+    <filename>frame58.jpg</filename>
+    <size>
+        <width>640</width>
+        <height>360</height>
+        <depth>3</depth>
+    </size>
+    <segmented>0</segmented>
+    <object>
+        <name>Jessie</name>
+        <pose>Unspecified</pose>
+        <truncated>0</truncated>
+        <occluded>0</occluded>
+        <difficult>0</difficult>
+        <bndbox>
+            <xmin>150</xmin>
+            <ymin>70</ymin>
+            <xmax>372</xmax>
+            <ymax>230</ymax>
+        </bndbox>
+    </object>
+</annotation>
