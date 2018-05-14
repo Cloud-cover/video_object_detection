@@ -6,6 +6,9 @@ __pycache__/
 # C extensions
 *.so
 
+# Tensorflow data
+*.record
+
 # Distribution / packaging
 .Python
 env/
