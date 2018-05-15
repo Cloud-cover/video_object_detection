@@ -22,7 +22,7 @@ Example usage:
     python create_pascal_tf_record.py \
         --data_dir=../workspace \
         --label_map_path=../workspace/label.pbtxt \
-        --output_path=../workspace/pascal.record
+        --output_path=../workspace
 """
 from __future__ import absolute_import
 from __future__ import division
@@ -151,7 +151,7 @@ def main(_):
 
   data_dir = FLAGS.data_dir # this is where we expect to find the images
   writer_train = tf.python_io.TFRecordWriter(os.path.join(FLAGS.output_path, 'pascal_train.record'))
-  writer_value = tf.python_io.TFRecordWriter(os.path.join(FLAGS.output_path, 'pascal_value.record'))
+  writer_value = tf.python_io.TFRecordWriter(os.path.join(FLAGS.output_path, 'pascal_eval.record'))
 
   # load the label map in the protofbuf format
   label_map_dict = label_map_util.get_label_map_dict(FLAGS.label_map_path)

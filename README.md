@@ -101,10 +101,15 @@ the file path. The following is the label map `label.pbtxt` file that I defined
 for my training annotated images (in my case only annotating my dog Jessie):
 ```
 item {
- id: 1
+ id: 1000
  name: 'Jessie'
 }
 ```
+
+Note that I intentionally picked a high number hoping to avoid collision with
+other ID's used in some of the pre-trained models that I am planning to use for
+the actual training. If you were going to train one from scratch, it would not
+matter.
 
 I then created the training data set by executing the following command:
 ```
@@ -113,12 +118,88 @@ $ python create_pascal_tf_record.py --data_dir=../workspace --label_map_path=../
 ```
 
 The resulting training file is this `./data/pascal_train.record` and the resulting
-validation file is this `./data/pascal_value.record`.
+validation file is this `./data/pascal_eval.record`.
 
 ### Training Neural Network
 
-At this point I decided to start with an existing model rather than starting
-from scratch. I was mainly motivated by the fact that I did not have the time,
-and resources to build a model from scratch.
+For the actual training we will use two directories that follow the recommended
+directory structure for training and evaluation:
+```
+./data/
+./data/label.pbtxt
+./data/pascal_value.record
+./data/pascal_train.record
+./models/
+./models/jessie/
+./models/jessie/faster_rcnn_resnet101_coco.config
+./models/jessie/train/
+./models/jessie/eval/
+```
+
+Rather than starting from scratch and investing the time and the computational
+resources, I decided to start with one of the pre-trained detection models. The
+description of these can be found (here)[https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md].
+
+For this project I chose the `faster_rcnn_inception_v2_coco` and downloaded
+the tar file from (here)[http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz].
+
+The tar file contains the following files:
+* checkpoint
+* frozen_inference_graph.pb
+* model.ckpt.data-00000-of-00001
+* model.ckpt.index
+* model.ckpt.meta
+* pipepline.config
+* saved_model/saved_model.pb
+
+At this point we need to move the various files into the right position. The
+checkpoint files will go into `./models/jessie/train/` directory. You could use
+a command like this from the un-tar directory:
+
+```
+$ mv model.ckpt.* [PATH_TO_THIS_PROJECT]/models/jessie/train/
+$ mv checkpoint [PATH_TO_THIS_PROJECT]/models/jessie/train/
+```
+
+The configuration file will go in to the `./models/jessie/` directory:
+
+```
+$ mv pipepline.config [PATH_TO_THIS_PROJECT]/models/jessie/faster_rcnn_resnet101_coco.config
+```
+
+Then update the config file by bumping up the number of classes (remember I am
+adding one). Also there are various placeholder for absolute path to the
+checkpoint directory, the training dataset, the evaluation data set, and the
+label map.
+
+Now it is time to kick of the local jobs! The following  (information)[https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md]
+was used to determine how to kick off the local jobs.
+
+Running the Training job locally:
+```
+$ cd ./venv/lib/python2.7/site-packages/tensorflow/models/research/
+$ python object_detection/train.py \
+      --logtostderr \
+      --pipeline_config_path=../../../../../../../models/jessie/faster_rcnn_resnet101_coco.config \
+      --train_dir=../../../../../../../models/jessie/train/
+```
+Note that by default, the training job will run indefinitely until the user kills it.
+
+Running the Evaluation job locally (separate terminal window):
+```
+$ cd ./venv/lib/python2.7/site-packages/tensorflow/models/research/
+$ python object_detection/eval.py \
+      --logtostderr \
+      --pipeline_config_path=../../../../../../../models/jessie/faster_rcnn_resnet101_coco.config \
+      --checkpoint_dir=../../../../../../../models/jessie/train/ \
+      --eval_dir=../../../../../../../models/jessie/eval/
+```
+
+Running the Tensorboard to inspect the Evaluation and Training jobs:
+```
+$cd ./venv/lib/python2.7/site-packages/tensorflow/models/research/
+$ tensorboard --logdir=../../../../../../../models/jessie/
+```
+
 
 TODO
