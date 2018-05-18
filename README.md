@@ -101,7 +101,7 @@ the file path. The following is the label map `label.pbtxt` file that I defined
 for my training annotated images (in my case only annotating my dog Jessie):
 ```
 item {
- id: 1000
+ id: 1
  name: 'Jessie'
 }
 ```
@@ -157,17 +157,23 @@ checkpoint files will go into `./models/jessie/train/` directory. You could use
 a command like this from the un-tar directory:
 
 ```
-$ mv model.ckpt.* [PATH_TO_THIS_PROJECT]/models/jessie/train/
-$ mv checkpoint [PATH_TO_THIS_PROJECT]/models/jessie/train/
+$ cp model.ckpt.* [PATH_TO_THIS_PROJECT]/models/jessie/train/
 ```
 
 The configuration file will go in to the `./models/jessie/` directory:
 
 ```
-$ mv pipepline.config [PATH_TO_THIS_PROJECT]/models/jessie/faster_rcnn_resnet101_coco.config
+$ mv pipepline.config [PATH_TO_THIS_PROJECT]/models/jessie/faster_rcnn_resnet101_coco.config.old
 ```
 
-Then update the config file by bumping up the number of classes (remember I am
+However, I ended up using the newer version of this file from the samples:
+
+`./venv/lib/python2.7/site-packages/tensorflow/models/research/object_detection/samples/configs/faster_rcnn_resnet101_coco.config`
+
+and just updated the hyper-parameters to be consistent with those downloaded
+with the pre-trained model.
+
+Then update the config file by setting the number of classes to 1 (remember I am
 adding one). Also there are various placeholder for absolute path to the
 checkpoint directory, the training dataset, the evaluation data set, and the
 label map.
@@ -201,5 +207,55 @@ $cd ./venv/lib/python2.7/site-packages/tensorflow/models/research/
 $ tensorboard --logdir=../../../../../../../models/jessie/
 ```
 
+I ran the training on my MacBookPro (no GPU) but was able to observe after
+some time on the TensorBoard decrease in the Total Loss:
+
+[image here]
+
+Under Images on the TensorBoard you can observe evaluation recognizing objects:
+
+[image here]
+
+
+### Gotchas
+
+* I opened additional terminals to run the other two jobs and activated the
+  virtualenv. However, I forgot to export the PYTHONPATH for `pwd`/slim.
+* One of the jobs kept crashing with a strange error (Python is not installed
+  as a framework. The Mac OS X backend will not be able to function correctly
+  if Python is not installed as a framework. See the Python documentation for
+  more information on installing Python as a framework on Mac OS X. Please
+  either reinstall Python as a framework, or try one of the other backends.).
+  To fix that I ended up following (this direction)[https://stackoverflow.com/questions/21784641/installation-issue-with-matplotlib-python?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa].
+
+
+### Exporting Trained Model For Inference
+
+After your model has been trained, you should export it to a Tensorflow graph
+proto using the following command:
+
+```
+$ cd ./venv/lib/python2.7/site-packages/tensorflow/models/research/
+$ python object_detection/export_inference_graph.py \
+    --input_type image_tensor \
+    --pipeline_config_path ../../../../../../../models/jessie/train/pipeline.config \
+    --trained_checkpoint_prefix ../../../../../../../models/jessie/train/model.ckpt-1339 \
+    --output_directory ../../../../../../../models/jessie/export/
+```
+
+Note the `1339` is specific to my run of TensorFlow training and was the highest
+checkpoint number in my training directory. You should now see a new set of files
+in the export directory looking like this:
+
+```
+./checkpoint
+./frozen_inference_graph.pb
+./model.ckpt.data-00000-of-00001
+./model.ckpt.index
+./model.ckpt.meta
+./pipeline.config
+./saved_model/saved_model.pb
+./saved_model/variables/
+```
 
 TODO

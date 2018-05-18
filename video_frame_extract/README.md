@@ -30,6 +30,7 @@ steps:
 * Install Apple Command Line Tools
 * Install Homebrew
 * Install OpenCV with Homebrew `$ brew install opencv3`
+* Install libfree6 with Homebrew `$ brew install freetype`
 
 Homebrew will install the OpenCV into system site-packages. If you are using
 virtualenv like I am, you will need to install it manually. First confirm
@@ -44,6 +45,12 @@ $ ls -l /usr/local/opt/opencv/lib/python2.7/site-packages
 Once you figure out the location, then you need to add it into your virtualenv:
 
 `$ echo /usr/local/opt/opencv/lib/python2.7/site-packages >> ./venv/lib/python2.7/site-packages/opencv3.pth`
+
+The `freetype` install with Homebrew ensures that `libfreetype6` C-backend is
+installed and can be used by Pillow. It should be installed before the
+python requirements. Otherwise TensorFlow evaluation may fail when trying
+to draw rectangles around recognized images (eval job during training).
+ 
 
 # Frame extraction
 
