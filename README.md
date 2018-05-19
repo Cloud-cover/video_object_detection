@@ -216,7 +216,7 @@ some time on the TensorBoard decrease in the Total Loss:
 
 Under Images on the TensorBoard you can observe evaluation recognizing objects:
 
-![TensorBoard Image Evaluation](./docs/TensorBoardEvaluationImages.png)
+![TensorBoard Image Evaluation](./docs/TensorBoardEvalutionImages.png)
 
 
 ### Gotchas
