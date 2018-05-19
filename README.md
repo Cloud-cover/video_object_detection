@@ -25,7 +25,7 @@ in 720 HD.
 The next step was to extract the individual frames out of the video so that
 the images could be annotated. In order to extract the frames, I wrote a Python
 script that uses OpenVPC to extract the images and resizes them. You can see it
-(here)[https://github.com/petr-undercover/video_object_detection/blob/master/video_frame_extract/README.md].
+[here](https://github.com/petr-undercover/video_object_detection/blob/master/video_frame_extract/README.md).
 
 Note that depending on the length of video file, this can produce a large number
 of JPEGs. Use the `--skip n` option to extract every n-th frame. After that I
@@ -37,14 +37,14 @@ manually reviewed the image files and deleted those that I did not want.
 For image labeling I found the `labelImg` on the internet that produces
 annotations in the Pascal VOC format but for whatever reason, I could not get
 it installed and running on my Mac. After looking around I opted for an easy
-way out by getting the `RectLabel` (image annotation tool)[https://rectlabel.com/]
+way out by getting the `RectLabel` [image annotation tool](https://rectlabel.com/)
 by Ryo Kawamura in the Apple App Store for $0.99.
 
 
 ### Creating of Training Dataset
 
 We will be using the
-(Tensorflow Object Detection API)[https://github.com/tensorflow/models/tree/master/research/object_detection]
+[Tensorflow Object Detection API](https://github.com/tensorflow/models/tree/master/research/object_detection)
  from now on. This requires an installation of additional pre-requisites into our
 environment.  This installation consists of the following steps:
 
@@ -53,14 +53,14 @@ environment.  This installation consists of the following steps:
 $ brew install protobuf
 ```
 
-* Installation of the (TensorFlow research models)[https://github.com/tensorflow/models].
+* Installation of the [TensorFlow research models](https://github.com/tensorflow/models).
 This repo contains among other things the TensorFlow Object Detection API
 ```
 $ cd ./venv/lib/python2.7/site-packages/tensorflow
 $ git clone https://github.com/tensorflow/models.git
 ```
 
-* Installation of COCO API Installation as documented (here)[https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md]
+* Installation of COCO API Installation as documented [here](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/installation.md)
 
 Note that the pip-installable pre-requisites are captured in the requirements.txt
 but you may still want to check the documentation of the COCO API in case there
@@ -138,19 +138,21 @@ directory structure for training and evaluation:
 
 Rather than starting from scratch and investing the time and the computational
 resources, I decided to start with one of the pre-trained detection models. The
-description of these can be found (here)[https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md].
+description of these can be found [here](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md).
 
 For this project I chose the `faster_rcnn_inception_v2_coco` and downloaded
-the tar file from (here)[http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz].
+the tar file from [here](http://download.tensorflow.org/models/object_detection/faster_rcnn_inception_v2_coco_2018_01_28.tar.gz).
 
 The tar file contains the following files:
-* checkpoint
-* frozen_inference_graph.pb
-* model.ckpt.data-00000-of-00001
-* model.ckpt.index
-* model.ckpt.meta
-* pipepline.config
-* saved_model/saved_model.pb
+```
+./checkpoint
+./frozen_inference_graph.pb
+./model.ckpt.data-00000-of-00001
+./model.ckpt.index
+./model.ckpt.meta
+./pipepline.config
+./saved_model/saved_model.pb
+```
 
 At this point we need to move the various files into the right position. The
 checkpoint files will go into `./models/jessie/train/` directory. You could use
@@ -178,7 +180,7 @@ adding one). Also there are various placeholder for absolute path to the
 checkpoint directory, the training dataset, the evaluation data set, and the
 label map.
 
-Now it is time to kick of the local jobs! The following  (information)[https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md]
+Now it is time to kick of the local jobs! The following  [information](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/running_locally.md)
 was used to determine how to kick off the local jobs.
 
 Running the Training job locally:
@@ -210,11 +212,11 @@ $ tensorboard --logdir=../../../../../../../models/jessie/
 I ran the training on my MacBookPro (no GPU) but was able to observe after
 some time on the TensorBoard decrease in the Total Loss:
 
-[image here]
+![TensorBoard Total Loss](./docs/TensorBoardTotalLossDecrease.png)
 
 Under Images on the TensorBoard you can observe evaluation recognizing objects:
 
-[image here]
+![TensorBoard Image Evaluation](./docs/TensorBoardEvaluationImages.png)
 
 
 ### Gotchas
@@ -226,7 +228,7 @@ Under Images on the TensorBoard you can observe evaluation recognizing objects:
   if Python is not installed as a framework. See the Python documentation for
   more information on installing Python as a framework on Mac OS X. Please
   either reinstall Python as a framework, or try one of the other backends.).
-  To fix that I ended up following (this direction)[https://stackoverflow.com/questions/21784641/installation-issue-with-matplotlib-python?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa].
+  To fix that I ended up following [this direction](https://stackoverflow.com/questions/21784641/installation-issue-with-matplotlib-python?utm_medium=organic&utm_source=google_rich_qa&utm_campaign=google_rich_qa).
 
 
 ### Exporting Trained Model For Inference
@@ -274,11 +276,11 @@ $ python idetect.py ../models/jessie/export/frozen_inference_graph.pb ../data/la
 
 This is how the image looks like before detection:
 
-[image here]
+![Image Before Detection](./docs/frame64_orig.jpg)
 
 This is how it looks like after detection:
 
-[image here]
+![Image Before Detection](./docs/frame64_detect.jpg)
 
 
 TODO
