@@ -260,6 +260,9 @@ in the export directory looking like this:
 ./saved_model/variables/
 ```
 
+The exported model is available in [this archive](./models/jessie/exported_model.tgz).
+
+
 ## Object Detection
 
 Once the model was created/trained, and it was exported as a frozen inference
@@ -282,5 +285,41 @@ This is how it looks like after detection:
 
 ![Image Before Detection](./docs/frame64_detect.jpg)
 
+I also wrote the `vdetect.py` script that reads in an mp4 file, extract one
+frame after another, subject the frame to object detection, modifies the frame
+by adding bounding boxes around the detected objects and writes the frame out
+to another video file. This demonstrates how this could be done in a video
+stream. The following is an example of a command to run this:
 
-TODO
+```
+$ cd ./video_frame_detect
+$ python vdetect.py ../models/jessie/export/frozen_inference_graph.pb ../data/label.pbtxt ../test_video.mp4
+```
+
+The following is a link to the original video file. You can also access the mp4
+[here](./docs/test_video.mp4).
+
+![Original Video](./docs/test_video.gif)
+
+This link is for the modified video file after detection. You can also access
+the video after detection and conversion to mp4 [here](./docs/test_video_detect.mp4).
+
+![Video After Detection](./docs/test_video_detect.gif)
+
+
+## Future Enhancements
+
+Right now this process is far from being a real-time process. The next
+enhancements should be about optimizing this process. In my testing
+on my MacBookPro (3 GHz Intel Core i7, 16 GB 1600 MHz DDR3, 1TB SSD), 26 second
+video took about 3 hours and 30 minutes to convert.  This could involve picking
+a different [COCO-trained models](https://github.com/tensorflow/models/blob/master/research/object_detection/g3doc/detection_model_zoo.md) that might perform faster. It could also involve frame sampling, i.e. running
+detection on every n-th frame assuming that the objects that we are detecting
+do not move fast.
+
+Experiment with different codecs to see if we can keep the output video file
+approximately the same size as the input video file, e.g. mp4v - Apple MPEG4
+Compressor - compresses images using MPEG4 compression algorithm. This probably
+would matter less if we are just showing the frame in real-time but if we are
+storing the output temporal compression, would be important. Right now the
+source MPEG 40MB file resulted in 244MB MJPG file.
