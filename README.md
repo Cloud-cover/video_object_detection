@@ -258,4 +258,27 @@ in the export directory looking like this:
 ./saved_model/variables/
 ```
 
+## Object Detection
+
+Once the model was created/trained, and it was exported as a frozen inference
+graph, we can use it for object detection. The following script will allow for
+identifying trained object(s) in a supplied image, adding a rectangle around it
+and saving it in place of the original image.  
+
+This is how you can use it:
+
+```
+$ cd ./video_frame_detect
+$ python idetect.py ../models/jessie/export/frozen_inference_graph.pb ../data/label.pbtxt frame64.jpg
+```
+
+This is how the image looks like before detection:
+
+[image here]
+
+This is how it looks like after detection:
+
+[image here]
+
+
 TODO
