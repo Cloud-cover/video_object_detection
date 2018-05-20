@@ -50,7 +50,7 @@ The `freetype` install with Homebrew ensures that `libfreetype6` C-backend is
 installed and can be used by Pillow. It should be installed before the
 python requirements. Otherwise TensorFlow evaluation may fail when trying
 to draw rectangles around recognized images (eval job during training).
- 
+
 
 # Frame extraction
 
